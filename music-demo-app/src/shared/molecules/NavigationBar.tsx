@@ -14,8 +14,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-
-import { Flex } from '../atom/Flex';
 import { H6Typography } from '../constant/typography/Typography';
 
 interface Props {
