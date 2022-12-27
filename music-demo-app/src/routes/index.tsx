@@ -1,12 +1,16 @@
 import { Route, Routes } from 'react-router-dom';
 
-import HomePage from '../pages/HomePage';
+import MainPage from '../pages/MainPage';
+import NavigationBar from '../shared/molecules/NavigationBar';
 
 function MainRoutes() {
   return (
-    <Routes>
-      <Route path="/home" element={<HomePage />} />;
-    </Routes>
+    <>
+      <NavigationBar />
+      <Routes>
+        <Route path="/" element={<MainPage />} />;
+      </Routes>
+    </>
   );
 }
 

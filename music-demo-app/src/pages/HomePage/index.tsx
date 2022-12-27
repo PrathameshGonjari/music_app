@@ -1,7 +1,5 @@
-import NavigationBar from "../../shared/molecules/NavigationBar";
-
 function HomePage() {
-  return <NavigationBar />;
+  return <div>HomePage</div>;
 }
 
 export default HomePage;

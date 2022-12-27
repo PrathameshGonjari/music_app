@@ -13,7 +13,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import { H6Typography } from '../constant/typography/Typography';
 
 interface Props {
@@ -28,7 +27,7 @@ const drawerWidth = 240;
 const navItems = ["Home"];
 
 export default function NavigationBar(props: Props) {
-  const { window } = props;
+
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
@@ -37,9 +36,7 @@ export default function NavigationBar(props: Props) {
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
-        MUI
-      </Typography>
+      <H6Typography text={"DEMO MUSIC"} sx={{ my: 2 }} />
       <Divider />
       <List>
         {navItems.map((item) => (
@@ -52,9 +49,6 @@ export default function NavigationBar(props: Props) {
       </List>
     </Box>
   );
-
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
 
   return (
     <Box>
@@ -82,7 +76,6 @@ export default function NavigationBar(props: Props) {
       </AppBar>
       <Box component="nav">
         <Drawer
-          container={container}
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
