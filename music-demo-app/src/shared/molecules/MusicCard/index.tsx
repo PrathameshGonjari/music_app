@@ -1,14 +1,14 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import SkipNextIcon from "@mui/icons-material/SkipNext";
-import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
+import StopCircleIcon from "@mui/icons-material/StopCircle";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
 
+import { musicListTypes } from "../../../pages/MainPage/type";
 import {
   H5Typography,
   SubTitleTypography,
@@ -19,10 +19,20 @@ interface MusicCardProps {
   image: string;
   AlbumTitle: string;
   AlbumSubTitle: string;
+  onPlayButtonClick: any;
+  music: musicListTypes;
+  playMusic: boolean;
 }
 
 export default function MusicCard(props: MusicCardProps) {
-  const { image, AlbumTitle, AlbumSubTitle } = props;
+  const {
+    image,
+    AlbumTitle,
+    AlbumSubTitle,
+    onPlayButtonClick,
+    music,
+    playMusic,
+  } = props;
 
   return (
     <Wrapper>
@@ -31,9 +41,10 @@ export default function MusicCard(props: MusicCardProps) {
           sx={{
             display: "flex",
             flexDirection: "column",
-            minWidth: 430,
-            maxWidth: 430,
+            minWidth: "70%",
+            maxWidth: "70%",
           }}
+          id="parent"
         >
           <CardContent sx={{ flex: "1 0 auto" }}>
             <H5Typography
@@ -45,23 +56,35 @@ export default function MusicCard(props: MusicCardProps) {
               }}
               text={AlbumTitle}
             />
-            <SubTitleTypography text={AlbumSubTitle} />
+            <SubTitleTypography
+              sx={{
+                display: "-webkit-box",
+                overflow: "hidden",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: 2,
+              }}
+              text={AlbumSubTitle}
+            />
           </CardContent>
           <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }}>
-            <IconButton aria-label="previous">
-              <SkipPreviousIcon />
-            </IconButton>
-            <IconButton aria-label="play/pause">
-              <PlayArrowIcon sx={{ height: 38, width: 38 }} />
-            </IconButton>
-            <IconButton aria-label="next">
-              <SkipNextIcon />
+            <IconButton
+              className="hidden-child"
+              onClick={() => {
+                onPlayButtonClick(music);
+              }}
+              aria-label="play/pause"
+              disabled={playMusic}
+            >
+              <PlayArrowIcon
+                className="playButton"
+                sx={{ height: 38, width: 38, color: "black" }}
+              />
             </IconButton>
           </Box>
         </Box>
         <CardMedia
           component="img"
-          sx={{ width: 151 }}
+          sx={{ width: "25%" }}
           image={image}
           alt="Album Cover"
         />
