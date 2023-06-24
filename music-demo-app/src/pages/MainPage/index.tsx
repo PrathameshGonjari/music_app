@@ -20,7 +20,7 @@ export default function MainPage() {
   const [queryParam, setQueryParam] = useSearchParams();
 
   const [filter, setFilter] = useState<filterProps>({
-    term: queryParam.get("term") || "",
+    term: queryParam.get("term") || "music",
     offset: 0,
     limit: 12,
   });
@@ -35,14 +35,16 @@ export default function MainPage() {
 
   const laodMusic = async (filter: any) => {
     const data: any = await getMusic(filter);
-
     if (data.success) {
       setMusicList(data.data.results);
+    } else {
+      //show error message
     }
     setIsLoading(false);
   };
 
   const onSearch = async (e: any) => {
+    setIsLoading(true);
     const value = e.target.value;
 
     const onSearchCB = async (searchValue: string) => {
@@ -57,57 +59,51 @@ export default function MainPage() {
     } = (await debounceCell(onSearchCB, value, 500)) as {
       musicList: { data: { results: any; success: boolean } };
     };
-
-    setFilter({ ...filter, term: value });
-    setMusicList(results);
+    if (success) {
+      setFilter({ ...filter, term: value });
+      setMusicList(results);
+    } else {
+      //show error message
+    }
     setIsLoading(false);
   };
 
   const handlePlayButtonClick = (musicData: musicListTypes) => {
-    setPlayMusic((pre) => !pre);
+    setPlayMusic(true);
     setMusic(musicData);
   };
 
   const onStopButtonClick = () => {
-    setPlayMusic((pre) => !pre);
+    setPlayMusic(false);
   };
-
-  if (true) {
-    <Loader />;
-  }
 
   return (
     <div style={{ display: "flex", flexDirection: "column", marginTop: 64 }}>
       <SearchBar onFilterChange={onSearch} filter={filter} />
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <>
-          {playMusic && (
-            <MusicPlayer music={music} onStopButtonClick={onStopButtonClick} />
-          )}
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-          >
-            {musicList.map((music: musicListTypes, index: number) => {
-              return (
-                <Grid item xs={2} sm={4} md={4} key={index}>
-                  <MusicCard
-                    music={music}
-                    playMusic={playMusic}
-                    image={music.artworkUrl100}
-                    AlbumTitle={music.trackName}
-                    AlbumSubTitle={music.artistName}
-                    onPlayButtonClick={handlePlayButtonClick}
-                  />
-                </Grid>
-              );
-            })}
-          </Grid>
-        </>
+      {isLoading && <Loader />}
+      {playMusic && (
+        <MusicPlayer music={music} onStopButtonClick={onStopButtonClick} />
       )}
+      <Grid
+        container
+        spacing={{ xs: 2, md: 3 }}
+        columns={{ xs: 4, sm: 8, md: 12 }}
+      >
+        {musicList.map((music: musicListTypes, index: number) => {
+          return (
+            <Grid item xs={2} sm={4} md={4} key={index}>
+              <MusicCard
+                music={music}
+                // playMusic={playMusic}
+                image={music.artworkUrl100}
+                AlbumTitle={music.trackName}
+                AlbumSubTitle={music.artistName}
+                onPlayButtonClick={handlePlayButtonClick}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
     </div>
   );
 }

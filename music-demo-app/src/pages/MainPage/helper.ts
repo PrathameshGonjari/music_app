@@ -5,6 +5,7 @@ export const initialMusic = {
   trackName: "",
   artworkUrl100: "",
   previewUrl: "",
+  trackId: 0
 };
 
 export const getMusic = async (filter: any) => {

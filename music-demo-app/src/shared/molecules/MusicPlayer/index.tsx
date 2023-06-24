@@ -23,13 +23,14 @@ import { TinyText, Wrapper } from "./style";
 interface MusicPlayerProps {
   music: musicListTypes;
   onStopButtonClick: any;
+
 }
 
 export default function MusicPlayer(props: MusicPlayerProps) {
   const { music, onStopButtonClick } = props;
-
   const [position, setPosition] = useState(0);
-  const [playMusic, setPlayMusic] = useState<boolean>(true);
+  const [playMusic, setPlayMusic] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0); //seconds
   const audioPlayer: any = useRef(); //refrence for audion component
   const progressBar: any = useRef(); //refrence for progress bar
@@ -43,8 +44,9 @@ export default function MusicPlayer(props: MusicPlayerProps) {
   }, [audioPlayer?.current?.loadedmetadata, audioPlayer?.current?.readyState]);
 
   useEffect(() => {
+    setPlayMusic(true)
     togglePlayPause();
-  }, []);
+  }, [music.trackId]);
 
   const theme = useTheme();
 
@@ -55,15 +57,17 @@ export default function MusicPlayer(props: MusicPlayerProps) {
   };
 
   const togglePlayPause = () => {
-    const playMusicState = playMusic;
-    setPlayMusic(!playMusicState);
-    if (playMusic) {
-      audioPlayer.current.play(); //play the audio
-      animationRef.current = requestAnimationFrame(whilePlaying);
-    } else {
-      audioPlayer.current.pause(); //pause the audio
-      cancelAnimationFrame(animationRef.current);
+    setPlayMusic((pre: boolean) => {
+      if (pre) {
+        audioPlayer?.current?.play(); //play the audio
+        animationRef.current = requestAnimationFrame(whilePlaying);
+      } else {
+        audioPlayer?.current?.pause(); //pause the audio
+        cancelAnimationFrame(animationRef.current);
+      }
+      return !pre
     }
+    );
   };
 
   const changeRange = (event: any) => {
@@ -85,8 +89,8 @@ export default function MusicPlayer(props: MusicPlayerProps) {
   };
 
   const whilePlaying = () => {
-    progressBar.current.value = audioPlayer.current.currentTime;
-    setPosition(Math.floor(progressBar.current.value));
+    progressBar.current.value = audioPlayer?.current?.currentTime;
+    setPosition(Math.floor(progressBar?.current?.value));
     animationRef.current = requestAnimationFrame(whilePlaying);
   };
 
@@ -191,11 +195,10 @@ export default function MusicPlayer(props: MusicPlayerProps) {
                       boxShadow: "0 2px 12px 0 rgba(0,0,0,0.4)",
                     },
                     "&:hover, &.Mui-focusVisible": {
-                      boxShadow: `0px 0px 0px 8px ${
-                        theme.palette.mode === "dark"
-                          ? "rgb(255 255 255 / 16%)"
-                          : "rgb(0 0 0 / 16%)"
-                      }`,
+                      boxShadow: `0px 0px 0px 8px ${theme.palette.mode === "dark"
+                        ? "rgb(255 255 255 / 16%)"
+                        : "rgb(0 0 0 / 16%)"
+                        }`,
                     },
                     "&.Mui-active": {
                       width: 20,

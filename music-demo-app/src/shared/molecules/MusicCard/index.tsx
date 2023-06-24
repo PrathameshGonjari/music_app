@@ -21,7 +21,7 @@ interface MusicCardProps {
   AlbumSubTitle: string;
   onPlayButtonClick: any;
   music: musicListTypes;
-  playMusic: boolean;
+  // playMusic: boolean;
 }
 
 export default function MusicCard(props: MusicCardProps) {
@@ -31,7 +31,7 @@ export default function MusicCard(props: MusicCardProps) {
     AlbumSubTitle,
     onPlayButtonClick,
     music,
-    playMusic,
+    // playMusic,
   } = props;
 
   return (
@@ -73,7 +73,7 @@ export default function MusicCard(props: MusicCardProps) {
                 onPlayButtonClick(music);
               }}
               aria-label="play/pause"
-              disabled={playMusic}
+            // disabled={playMusic}
             >
               <PlayArrowIcon
                 className="playButton"

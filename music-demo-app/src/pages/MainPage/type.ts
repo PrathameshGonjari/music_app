@@ -3,4 +3,5 @@ export interface musicListTypes {
   trackName: string;
   artworkUrl100: string;
   previewUrl:string;
+  trackId: number
 }
