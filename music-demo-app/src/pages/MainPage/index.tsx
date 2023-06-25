@@ -9,6 +9,7 @@ import MusicPlayer from "../../shared/molecules/MusicPlayer/index";
 import SearchBar from "../../shared/molecules/SearchBar";
 import { debounceCell, getMusic, initialMusic } from "./helper";
 import { musicListTypes } from "./type";
+import LoadingMusicCard from "../../shared/molecules/MusicCard/LoadingState";
 
 interface filterProps {
   term: string;
@@ -46,19 +47,18 @@ export default function MainPage() {
   const onSearch = async (e: any) => {
     setIsLoading(true);
     const value = e.target.value;
-
     const onSearchCB = async (searchValue: string) => {
       const newFilters = { ...filter, term: searchValue, page: 1 };
       const musicResponse = await getMusic(newFilters);
       return { musicList: musicResponse };
     };
+
     const {
-      musicList: {
-        data: { results, success },
-      },
+      musicList: { data: { results }, success },
     } = (await debounceCell(onSearchCB, value, 500)) as {
-      musicList: { data: { results: any; success: boolean } };
+      musicList: { data: { results: any; }, success: boolean };
     };
+
     if (success) {
       setFilter({ ...filter, term: value });
       setMusicList(results);
@@ -77,6 +77,8 @@ export default function MainPage() {
     setPlayMusic(false);
   };
 
+  const skeletonArray = Array(10)?.fill("")
+
   return (
     <div style={{ display: "flex", flexDirection: "column", marginTop: 64 }}>
       <SearchBar onFilterChange={onSearch} filter={filter} />
@@ -84,26 +86,37 @@ export default function MainPage() {
       {playMusic && (
         <MusicPlayer music={music} onStopButtonClick={onStopButtonClick} />
       )}
-      <Grid
-        container
-        spacing={{ xs: 2, md: 3 }}
-        columns={{ xs: 4, sm: 8, md: 12 }}
-      >
-        {musicList.map((music: musicListTypes, index: number) => {
-          return (
-            <Grid item xs={2} sm={4} md={4} key={index}>
-              <MusicCard
-                music={music}
-                // playMusic={playMusic}
-                image={music.artworkUrl100}
-                AlbumTitle={music.trackName}
-                AlbumSubTitle={music.artistName}
-                onPlayButtonClick={handlePlayButtonClick}
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
+      {isLoading &&
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}
+        >
+          {skeletonArray?.map((index: number) => {
+            return <Grid item xs={2} sm={4} md={4} key={index}> <LoadingMusicCard /> </Grid>
+          })}
+        </Grid>}
+      {!isLoading && musicList &&
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}
+        >
+          {musicList.map((music: musicListTypes, index: number) => {
+            return (
+              <Grid item xs={2} sm={4} md={4} key={index}>
+                <MusicCard
+                  music={music}
+                  // playMusic={playMusic}
+                  image={music.artworkUrl100}
+                  AlbumTitle={music.trackName}
+                  AlbumSubTitle={music.artistName}
+                  onPlayButtonClick={handlePlayButtonClick}
+                />
+              </Grid>
+            );
+          })}
+        </Grid>}
     </div>
   );
 }
