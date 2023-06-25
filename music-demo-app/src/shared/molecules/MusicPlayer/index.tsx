@@ -19,6 +19,7 @@ import {
   SubTitleTypography,
 } from "../../constant/typography/Typography";
 import { TinyText, Wrapper } from "./style";
+import { ArtistNameStyle, CardBoxStyle, IconMainWrapper, IconStyle, SliderWrapper, StopIconStyle, TinyBoxStyle, TrackNameStyle } from "./helper";
 
 interface MusicPlayerProps {
   music: musicListTypes;
@@ -30,7 +31,6 @@ export default function MusicPlayer(props: MusicPlayerProps) {
   const { music, onStopButtonClick } = props;
   const [position, setPosition] = useState(0);
   const [playMusic, setPlayMusic] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0); //seconds
   const audioPlayer: any = useRef(); //refrence for audion component
   const progressBar: any = useRef(); //refrence for progress bar
@@ -102,16 +102,37 @@ export default function MusicPlayer(props: MusicPlayerProps) {
     setPosition(Math.floor(0));
   };
 
+  const SliderStyle = {
+    color: theme.palette.mode === "dark" ? "#fff" : "rgba(0,0,0,0.87)",
+    height: 4,
+    "& .MuiSlider-thumb": {
+      width: 8,
+      height: 8,
+      transition: "0.3s cubic-bezier(.47,1.64,.41,.8)",
+      "&:before": {
+        boxShadow: "0 2px 12px 0 rgba(0,0,0,0.4)",
+      },
+      "&:hover, &.Mui-focusVisible": {
+        boxShadow: `0px 0px 0px 8px ${theme.palette.mode === "dark"
+          ? "rgb(255 255 255 / 16%)"
+          : "rgb(0 0 0 / 16%)"
+          }`,
+      },
+      "&.Mui-active": {
+        width: 20,
+        height: 20,
+      },
+    },
+    "& .MuiSlider-rail": {
+      opacity: 0.28,
+    },
+  }
+
   return (
     <Wrapper>
       <Card sx={{ display: "flex" }}>
         <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            minWidth: "70%",
-            maxWidth: "70%",
-          }}
+          sx={CardBoxStyle}
         >
           <CardContent sx={{ flex: "1 0 auto" }}>
             <audio
@@ -120,35 +141,25 @@ export default function MusicPlayer(props: MusicPlayerProps) {
               preload="metadata"
             ></audio>
             <H5Typography
-              sx={{
-                display: "-webkit-box",
-                overflow: "hidden",
-                WebkitBoxOrient: "vertical",
-                WebkitLineClamp: 2,
-              }}
+              sx={TrackNameStyle}
               text={music.trackName}
             />
             <SubTitleTypography
-              sx={{
-                display: "-webkit-box",
-                overflow: "hidden",
-                WebkitBoxOrient: "vertical",
-                WebkitLineClamp: 2,
-              }}
+              sx={ArtistNameStyle}
               text={music.artistName}
             />
           </CardContent>
 
-          <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }}>
+          <Box sx={IconMainWrapper}>
             <IconButton onClick={replayMusic}>
-              <Replay10Icon sx={{ height: 38, width: 38, color: "black" }} />
+              <Replay10Icon sx={IconStyle} />
             </IconButton>
             <IconButton onClick={togglePlayPause} aria-label="play/pause">
               {playMusic ? (
-                <PlayArrowIcon sx={{ height: 38, width: 38, color: "black" }} />
+                <PlayArrowIcon sx={IconStyle} />
               ) : (
                 <PauseCircleIcon
-                  sx={{ height: 38, width: 38, color: "black" }}
+                  sx={IconStyle}
                 />
               )}
             </IconButton>
@@ -160,19 +171,14 @@ export default function MusicPlayer(props: MusicPlayerProps) {
                 }}
                 aria-label="play/pause"
               >
-                <StopCircleIcon sx={{ height: 38, width: 38 }} />
+                <StopCircleIcon sx={StopIconStyle} />
               </IconButton>
             )}
             <IconButton onClick={forwardMusic}>
-              <Forward10Icon sx={{ height: 38, width: 38, color: "black" }} />
+              <Forward10Icon sx={IconStyle} />
             </IconButton>
             <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                minWidth: "70%",
-                maxWidth: "70%",
-              }}
+              sx={SliderWrapper}
             >
               <Slider
                 ref={progressBar}
@@ -183,40 +189,10 @@ export default function MusicPlayer(props: MusicPlayerProps) {
                 step={1}
                 max={duration}
                 onChange={changeRange}
-                sx={{
-                  color:
-                    theme.palette.mode === "dark" ? "#fff" : "rgba(0,0,0,0.87)",
-                  height: 4,
-                  "& .MuiSlider-thumb": {
-                    width: 8,
-                    height: 8,
-                    transition: "0.3s cubic-bezier(.47,1.64,.41,.8)",
-                    "&:before": {
-                      boxShadow: "0 2px 12px 0 rgba(0,0,0,0.4)",
-                    },
-                    "&:hover, &.Mui-focusVisible": {
-                      boxShadow: `0px 0px 0px 8px ${theme.palette.mode === "dark"
-                        ? "rgb(255 255 255 / 16%)"
-                        : "rgb(0 0 0 / 16%)"
-                        }`,
-                    },
-                    "&.Mui-active": {
-                      width: 20,
-                      height: 20,
-                    },
-                  },
-                  "& .MuiSlider-rail": {
-                    opacity: 0.28,
-                  },
-                }}
+                sx={SliderStyle}
               />
               <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  mt: -2,
-                }}
+                sx={TinyBoxStyle}
               >
                 <TinyText>{formatDuration(position)}</TinyText>
                 <TinyText>-{formatDuration(duration - position)}</TinyText>

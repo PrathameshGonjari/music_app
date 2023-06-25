@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
 
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import StopCircleIcon from "@mui/icons-material/StopCircle";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -11,7 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import { musicListTypes } from "../../../pages/MainPage/type";
 import {
   H5Typography,
-  SubTitleTypography,
+  SubTitleTypography
 } from "../../constant/typography/Typography";
 import { Wrapper } from "./style";
 

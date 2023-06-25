@@ -18,13 +18,13 @@ interface filterProps {
 }
 
 export default function MainPage() {
-  const [queryParam, setQueryParam] = useSearchParams();
-
-  const [filter, setFilter] = useState<filterProps>({
+  const [queryParam] = useSearchParams();
+  const initialFilter = {
     term: queryParam.get("term") || "music",
     offset: 0,
     limit: 12,
-  });
+  }
+  const [filter, setFilter] = useState<filterProps>(initialFilter);
   const [musicList, setMusicList] = useState<musicListTypes[]>([]);
   const [music, setMusic] = useState<musicListTypes>(initialMusic);
   const [isLoading, setIsLoading] = useState<boolean>(true);
